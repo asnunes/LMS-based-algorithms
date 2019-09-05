@@ -5,10 +5,6 @@ class LMSBase:
     """
     Description
     ---------
-    
-    Implements the Complex LMS algorithm for COMPLEX valued data.
-    (Algorithm 3.2 - book: Adaptive Filtering: Algorithms and Practical Implementation, Diniz)
-    
     Author: Alexandre Henrique da Silva Nunes
     Based on Matlab code by Markus Vinícius Santos Lima available at 
     https://www.mathworks.com/matlabcentral/fileexchange/3582-adaptive-filtering
