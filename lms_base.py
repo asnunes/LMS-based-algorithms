@@ -1,7 +1,7 @@
 import numpy as np
 import lms_utils
 
-class LMS:
+class LMSBase:
     """
     Description
     ---------
@@ -82,10 +82,10 @@ class LMS:
         for k in range(k_max):
             x_k = lms_utils.tapped_x(x, self.num_of_coefficients, k)
             w_k = self.coefficients_mtx[:, k]
-            y_k = np.dot(lms_utils._conj(w_k), x_k)
+            y_k = np.dot(lms_utils.conj(w_k), x_k)
             err_k = desired[k] - y_k
         
-            next_w_k = w_k + step * lms_utils._conj(err_k) * x_k
+            next_w_k = self._coefficients_update_function(w_k, step, err_k, x_k)
             
             self._update(err_k, y_k, next_w_k, k)
             
@@ -94,6 +94,12 @@ class LMS:
             'errors': self.errors_vector,
             'coefficients': self.coefficients_mtx
         }
+
+    @staticmethod
+    def _coefficients_update_function(w_k, step, err_k, x_k):
+      # Override this method
+      return 0
+      return w_k + step * lms_utils.conj(err_k) * x_k
         
     def _initialize_vars(self, k_max):
         self.errors_vector = np.zeros((k_max, 1))
