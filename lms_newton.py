@@ -36,7 +36,7 @@ class LMSNewton(LMSBase):
     prod_a = np.dot(self.inv_estimate_R, np.transpose(np.array([x_k])))
     prod_b = np.dot(np.transpose(np.conj(x_k)), self.inv_estimate_R)
     num = np.dot(prod_a, np.array([prod_b]))
-    den = (1 - alpha)/alpha + np.dot(np.dot(np.dot(np.conj(x_k), self.inv_estimate_R), x_k)
+    den = (1 - alpha)/alpha + np.dot(np.dot(np.dot(np.conj(x_k), self.inv_estimate_R), x_k))
                      
     next_w_k = w_k + step * err_k * np.dot(self.inv_estimate_R, x_k)
     self.update_inv_estimate_R(alpha, num, den)
