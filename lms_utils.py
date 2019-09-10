@@ -20,7 +20,8 @@ def tapped_x(x, window, k):
   
   tapped_x : mirrored sub row vector
   """
-  prefixed_input = LMSUtils._range_x(x, k-window+1, k+1)
+
+  prefixed_input = _range_x(x, k-window+1, k+1)
   return prefixed_input[::-1]
 
 def dim_x(vec):
@@ -41,7 +42,6 @@ def dim_x(vec):
 
   return vec.shape[0]
 
-@staticmethod
 def conj(vec):
   """
   Take an complex vector and return its conjugate.
@@ -67,7 +67,7 @@ def _x(x, index):
 
 # Improve source code regularity
 def _range_x(x, start, length):
-    sub_x = [LMSUtils._x(x, start)]
+    sub_x = [_x(x, start)]
     for it in range(start+1, length):
-        sub_x = np.append(sub_x, LMSUtils._x(x, it))
+        sub_x = np.append(sub_x, _x(x, it))
     return sub_x

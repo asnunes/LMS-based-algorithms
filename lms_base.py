@@ -1,5 +1,5 @@
 import numpy as np
-import lms_utils
+from lms_utils import *
 
 class LMSBase:
     """
@@ -46,7 +46,7 @@ class LMSBase:
         self.outputs_vector = np.array([0], dtype=initial_coefficients.dtype)
         self.coefficients_mtx = np.array(initial_coefficients, dtype=initial_coefficients.dtype)
         
-    def fit(self, desired, x, step):
+    def fit(self, desired, x, step, **kargs):
         """
         Fit filter parameters to considering desired vector and input x. desired and x must have length K,
         where K is the number of iterations
@@ -59,6 +59,7 @@ class LMSBase:
         x : numpy array (row vector)
             input signal to feed filter
         step : Convergence (relaxation) factor.
+        kargs: Algorithm particular arguments. See each class for more info.
         
         Outputs
         -------
@@ -72,16 +73,23 @@ class LMSBase:
                 Store the estimated coefficients for each iteration. (Coefficients at one iteration are COLUMN vector)      
         """
         
-        k_max = lms_utils.dim_x(desired)
+        k_max = dim_x(desired)
         self._initialize_vars(k_max)
         
         for k in range(k_max):
-            x_k = lms_utils.tapped_x(x, self.num_of_coefficients, k)
+            x_k = tapped_x(x, self.num_of_coefficients, k)
             w_k = self.coefficients_mtx[:, k]
-            y_k = np.dot(lms_utils.conj(w_k), x_k)
+            y_k = np.dot(conj(w_k), x_k)
             err_k = desired[k] - y_k
+            
+            # print('x_k: ', x_k)
+            # print('w_k: ', w_k)
+            # print('y_k: ', y_k)
+            # print('err_k: ', err_k)
         
-            next_w_k = self._coefficients_update_function(w_k, step, err_k, x_k)
+            next_w_k = self._coefficients_update_function(w_k, step, err_k, x_k, **kargs)
+
+            # print ('next_w_k: ', next_w_k)
             
             self._update(err_k, y_k, next_w_k, k)
             
@@ -95,7 +103,6 @@ class LMSBase:
     def _coefficients_update_function(w_k, step, err_k, x_k):
       # Override this method
       return 0
-      return w_k + step * lms_utils.conj(err_k) * x_k
         
     def _initialize_vars(self, k_max):
         self.errors_vector = np.zeros((k_max, 1))
